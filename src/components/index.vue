@@ -7,13 +7,13 @@
             <div style="padding: 14px;">
                 <span>{{i.attributes.form_data.title}}</span>
                 <div class="bottom clearfix">
-                    <time class="time">{{i.attributes.form_data.date.getMonth()+1}},{{i.attributes.form_data.date.getDate()}} {{i.attributes.form_data.date.getFullYear()}}</time>
+                    <time class="time">{{i.attributes.form_data.date.getMonth()+1}}月 {{i.attributes.form_data.date.getDate()}}日 {{i.attributes.form_data.date.getFullYear()}}</time>
                     <el-row class="row">
                         <el-col :span="12">
                             <el-button type="text" @click=" centerDialogVisible= true;del(i,k);" class="button left">删除</el-button>
                         </el-col>
                         <el-col :span="12">
-                            <el-button type="text" class="button right">更多</el-button>
+                                <el-button type="text" @click="content(i.id)" class="button right">更多</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -33,7 +33,7 @@
 
 <script>
 import AV from "leancloud-storage";
-import item from 'element-ui';
+import item from "element-ui";
 AV.init("FkqqYvsF0LriKkSIJb7E3ljX-gzGzoHsz", "ExgNcL3fCzi75uv5R4yJxVnM");
 export default {
     name: "index",
@@ -47,49 +47,54 @@ export default {
     },
     created() {
         let this_ = this;
-        var query = new AV.Query('memo');
-        query.descending('createdAt');
-        query.find().then(todo => {
-            this_.form_data = todo
+        var query = new AV.Query("memo");
+        query.descending("createdAt");
+        query
+            .find()
+            .then(todo => {
+                this_.form_data = todo;
 
-            // console.log(todo.attributes)
-        }).catch(error => {
-
-        });
+                // console.log(todo.attributes)
+            })
+            .catch(error => {});
     },
     methods: {
-        del(i,k) {
+        del(i, k) {
             let this_ = this;
-            console.log(k)
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                var todo = AV.Object.createWithoutData('memo',i.id);
-                todo.destroy().then(success => {
+            console.log(k);
+            this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                })
+                .then(() => {
+                    var todo = AV.Object.createWithoutData('memo', i.id);
+                    todo.destroy().then(success => {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        this_.form_data.splice(k, 1)
+                    }).catch(error => {});
+                })
+                .catch(() => {
                     this.$message({
-                        type: 'success',
-                        message: '删除成功!'
+                        type: "info",
+                        message: "已取消删除"
                     });
-                    this_.form_data.splice(k,1)
-                }).catch(error => {
                 });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
+        },
+        content(objectId){
+            console.log(objectId);
+            this.$router.push({path:'/content',query:{id:objectId}})
         }
     }
-
 };
 </script>
 
 <style scoped>
 .card_box {
-    margin-bottom: 30px
+    margin-bottom: 30px;
 }
 
 .time {
@@ -98,7 +103,7 @@ export default {
 }
 
 .row {
-    margin-top: 15px
+    margin-top: 15px;
 }
 
 .bottom {
