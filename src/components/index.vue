@@ -13,7 +13,7 @@
                             <el-button type="text" @click=" centerDialogVisible= true;del(i,k);" class="button left">删除</el-button>
                         </el-col>
                         <el-col :span="12">
-                                <el-button type="text" @click="content(i.id)" class="button right">更多</el-button>
+                            <el-button type="text" @click="content(i.id)" class="button right">更多</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -68,14 +68,17 @@ export default {
                     type: "warning"
                 })
                 .then(() => {
-                    var todo = AV.Object.createWithoutData('memo', i.id);
-                    todo.destroy().then(success => {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                        this_.form_data.splice(k, 1)
-                    }).catch(error => {});
+                    var todo = AV.Object.createWithoutData("memo", i.id);
+                    todo
+                        .destroy()
+                        .then(success => {
+                            this.$message({
+                                type: "success",
+                                message: "删除成功!"
+                            });
+                            this_.form_data.splice(k, 1);
+                        })
+                        .catch(error => {});
                 })
                 .catch(() => {
                     this.$message({
@@ -84,9 +87,14 @@ export default {
                     });
                 });
         },
-        content(objectId){
+        content(objectId) {
             console.log(objectId);
-            this.$router.push({path:'/content',query:{id:objectId}})
+            this.$router.push({
+                path: "/content",
+                query: {
+                    id: objectId
+                }
+            });
         }
     }
 };

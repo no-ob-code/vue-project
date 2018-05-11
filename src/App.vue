@@ -1,5 +1,7 @@
 <template>
+
 <div id="app">
+    <div id="header"> <img src="./assets/left.png" alt="" class="img_left" :class="{show_left:show}" @click="back"> {{header}}  </div>
     <transition :name="transitionName">
         <router-view class="Router"></router-view>
     </transition>
@@ -11,17 +13,27 @@ export default {
     name: 'App',
     data() {
         return {
-            transitionName: 'slide-right' // 默认动态路由变化为slide-right
+            transitionName: 'slide-right', // 默认动态路由变化为slide-right
+            header:'Index',
+            show:false
         }
     },
     　　watch: {　　　
-        '$route' (to, from) {　　　　
+        '$route' (to, from) {　
+            this.header = to.name;
+            this.header=='Index'?this.show=false:this.show=true;
+            console.log(this.show)
             if (to.path == '/') {
                 this.transitionName = 'slide-right';
             } else {
                 this.transitionName = 'slide-left';
             }
         }　
+    },
+    methods:{
+        back(){
+            this.$router.back(-1)
+        }
     }
 
 }
@@ -40,7 +52,7 @@ export default {
     position: absolute;
      width: 95%;
      transition: all .8s ease;
-     top: 20px;
+     top: 50px;
      left:2.5%
 }
 
@@ -56,5 +68,24 @@ export default {
     opacity: 0;
     -webkit-transform: translate(-100%, 0);
     transform: translate(-100% 0);
+}
+#header{
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    background: #409EFF;
+    color: #fff
+}
+.img_left{
+    float: left;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    display: none
+}
+.show_left{
+    display: block
 }
 </style>
